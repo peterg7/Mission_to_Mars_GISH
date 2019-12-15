@@ -6,7 +6,6 @@ from splinter import Browser
 from bs4 import BeautifulSoup
 
 
-
 def scrape_all():
 	import datetime as dt
 	# initiate headless driver for deployment
@@ -21,6 +20,7 @@ def scrape_all():
 	      "facts": mars_facts(),
 	      "last_modified": dt.datetime.now()
 	}
+	return data
 
 
 # ## Article Scraping
@@ -37,7 +37,6 @@ def mars_news(browser):
 	news_soup = BeautifulSoup(html, 'html.parser')
 	try:
 		slide_elem = news_soup.select_one('ul.item_list li.slide')
-		slide_elem.find("div", class_='content_title')
 
 		# use the parent element to find the first `a` tag and save it as `news_title`
 		news_title = slide_elem.find("div", class_='content_title').get_text()
@@ -82,7 +81,6 @@ def featured_image(browser):
 
 def mars_facts():
 	import pandas as pd
-	
 	try:
 		# Use pandas to extract table from webpage
 		df = pd.read_html('http://space-facts.com/mars/')[0]
