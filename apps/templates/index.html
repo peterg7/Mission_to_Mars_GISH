@@ -4,6 +4,9 @@
    <meta charset="UTF-8" />
    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+   <style type="text/css">
+   		body { background: #994208 !important; }
+   	</style>
    <title>Mission to Mars</title>
    <link
     	rel="stylesheet"
@@ -11,8 +14,8 @@
    />
  </head>
 <body>
-	<div class="container">
-		<div class="jumbotron text-center">
+	<div class="container" style ='background-color: #edede8;'>
+		<div class="jumbotron text-center" style ='background-color: #edede8;'>
 			<h1>Mission to Mars</h1>
 			<p><a class="btn btn-primary btn-lg" href="/scrape"
 							role="button">Scrape New Data</a></p>
@@ -43,7 +46,46 @@
 					<h4>Mars Facts</h4>
 					{{ mars.facts | safe}}
 				</div>
+
 			</div>
+
+			<!-- Mars' Hemisphere Images -->
+			<div class="row" id="mars-hemisphere-image">
+				<h2>Mars Hemisphere Images</h2>
+				<div class="col-md-6">
+					<img 
+						src="{{ mars.hemisphere_image_1['img_url'] }}" 
+						class="img-responsive"
+						alt="Responsive image">
+					<h4>{{ mars.hemisphere_image_1['title'] }}</h4>
+				</div>
+				<div class="col-md-6">
+					<img 
+						src="{{ mars.hemisphere_image_2['img_url'] }}" 
+						class="img-responsive"
+						alt="Responsive image">
+					<h4>{{ mars.hemisphere_image_2['title'] }}</h4>
+				</div>
+			</div>
+			<div class="row" id="spacer"
+
+			<div class="row" id="mars-hemisphere-image">
+				<div class="col-md-6">
+					<img 
+						src="{{ mars.hemisphere_image_3['img_url'] }}" 
+						class="img-responsive"
+						alt="Responsive image">
+					<h4>{{ mars.hemisphere_image_3['title'] }}</h4>
+				</div>
+				<div class="col-md-6">
+					<img 
+						src="{{ mars.hemisphere_image_4['img_url'] }}" 
+						class="img-responsive"
+						alt="Responsive image">
+					<h4>{{ mars.hemisphere_image_4['title'] }}</h4>
+				</div>
+			</div>
+
 		</div>
 	
 	</div>

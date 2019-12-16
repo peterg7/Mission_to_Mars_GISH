@@ -12,11 +12,18 @@ def scrape_all():
 	browser = Browser("chrome", executable_path="chromedriver", headless=True)
 	news_title, news_paragraph = mars_news(browser)
 
+	# collect list of hemisphere images
+	hemi_img_list = hemisphere_images(browser)
+
 	# run all scraping functions and store results in dictionary
 	data = {
 	      "news_title": news_title,
 	      "news_paragraph": news_paragraph,
 	      "featured_image": featured_image(browser),
+	      "hemisphere_image_1": hemi_img_list[0],
+	      "hemisphere_image_2": hemi_img_list[1],
+	      "hemisphere_image_3": hemi_img_list[2],
+	      "hemisphere_image_4": hemi_img_list[3],
 	      "facts": mars_facts(),
 	      "last_modified": dt.datetime.now()
 	}
@@ -70,7 +77,7 @@ def featured_image(browser):
 
 	try:
 		# Find the relative image url
-		img_url_rel = img_soup.select_one('figure.lede a img').get("src")
+		img_url_rel = img_soup.select_one('figure.lede a img').get("src") 
 	except AttributeError:
 		return None
 
@@ -78,6 +85,39 @@ def featured_image(browser):
 	img_url = f'https://www.jpl.nasa.gov{img_url_rel}'
 
 	return img_url
+
+
+def hemisphere_images(browser):
+	base_url = 'https://astrogeology.usgs.gov'
+	# Visit URL
+	url = f'{base_url}/search/results?q=hemisphere+enhanced&k1=target&v1=Mars'
+	browser.visit(url)
+
+	# set up HTML parser
+	html = browser.html
+	news_soup = BeautifulSoup(html, 'html.parser')
+
+	# Find the links and titles of each hemisphere image
+	img_list = []
+	for item in (news_soup.find_all('div', class_='item')):
+		img_dict = {}
+
+		try:
+			img_title = item.find_all('a', class_='itemLink')[1].find('h3').get_text()
+			img_page = item.find('a')['href']
+
+			# Vist image-spectic page to get link for full-size image
+			browser.visit(f'{base_url}{img_page}')
+			img_url = browser.find_by_css('li a').first['href']
+
+			img_dict['img_url'] = img_url
+			img_dict['title'] = img_title.rsplit(' ', 1)[0]
+			img_list.append(img_dict)
+		except AttributeError:
+			img_list.append(None)
+
+	return img_list
+
 
 def mars_facts():
 	import pandas as pd
@@ -91,7 +131,7 @@ def mars_facts():
 	df.set_index('description', inplace=True)
 
 	# convert dataframe into HTML format
-	return df.to_html()
+	return df.to_html(classes=['table-bordered', 'table-hover', 'table-dark'])
 
 
 if __name__ == "__main__":
